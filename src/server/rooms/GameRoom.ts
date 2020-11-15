@@ -95,8 +95,13 @@ export class GameRoom extends Room<State> {
         break;
       case 'pass':
         if (this.state.turnPhase != 1 && this.state.turnPhase != 3 && this.state.turnPhase != 4) return;
-        glf.pass(this.state);
-        this.state.turnPhase += 1;
+        if (this.state.turnPhase == 3) {
+          glf.pass(this.state);
+          this.state.turnPhase += 2;
+        } else {
+          glf.pass(this.state);
+          this.state.turnPhase += 1;
+        }
         break;
       case 'throw':
         if (this.state.turnPhase != 2) return;
