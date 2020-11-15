@@ -2,9 +2,7 @@ import * as PIXI from "pixi.js";
 import { Room, Client } from "colyseus.js";
 import { State } from "../server/rooms/State";
 
-import { PlayerList } from "./displayelements/Playerlist";
-import { InsertName } from "./displayelements/InsertName";
-import { Controls } from "./displayelements/Controls";
+import { MainRoom } from "./rooms/MainRoom";
 
 const ENDPOINT = (process.env.NODE_ENV==="development")
     ? "ws://localhost:2567"
@@ -24,6 +22,7 @@ export class Application extends PIXI.Application {
         });
 
         this.initialDims = this.setSize(400, 400);
+
         this.authenticate();       
     }
 
@@ -53,39 +52,11 @@ export class Application extends PIXI.Application {
         this.room.onStateChange.once((state) => {
             console.log("this is the first room state!", state, this.room);
         });
-        
-        let playerlist = new PlayerList(this.room.state);
-        this.stage.addChild(playerlist);        
-
-        let controls = new Controls(this);
-        controls.x = this.screen.width / 2;
-        controls.y = this.screen.height / 2;
-    
-        controls.pivot.x = controls.width / 2;
-        controls.pivot.y = controls.height / 2;
-        controls.y += 85;
-        this.stage.addChild(controls);
-
-        let namescreen = new InsertName(this);
-        this.stage.addChild(namescreen);
-        
-
-        this.room.onStateChange((state) => {
-            console.log("the room state has been updated:", state);
-            playerlist.updatePlayers();
-            
-            if(!(this.room.state.players[this.room.sessionId].name)) {
-                namescreen.visible = true;
-                controls.interactiveChildren = false;
-            } else {
-                namescreen.visible = false;
-                controls.interactiveChildren = true;
-            }
-        });
 
         this.room.state.players.onChange = (player, key) => {
             console.log(player, "have changes at", key);
         };
 
+        new MainRoom(this, this.room);
     }
 }
