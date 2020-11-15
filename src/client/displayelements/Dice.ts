@@ -54,10 +54,36 @@ export class DiceGroup extends PIXI.Container {
         }
     }
 
+    updateDice(values) {
+        for(let i = 0; i<3; i++) {
+            this.diceArray[i].updateEyes(values[i]);
+        }
+    }
+
     getDiceById(id) {
         this.diceArray.forEach(dice => {
             if(dice.id == id) return dice;
         })
+    }
+}
+
+export class ShowDice extends DiceGroup {
+    constructor(){
+        super(); 
+    }
+
+    updateAndDrawDice(values) {
+        values.sort().reverse()
+        this.removeChildren()
+        let pos = 0
+        for(let i = 0; i<3; i++) {
+            this.diceArray[i].updateEyes(values[i]);
+            if (values[i] != 0) {
+                this.diceArray[i].x = pos*60;
+                this.addChild(this.diceArray[i]);
+                pos++
+            }
+        }
     }
 }
 
@@ -92,15 +118,11 @@ export class ProposeDice extends DiceGroup {
     }
 }
 
-function output(show:Array<number>, hide:Array<number>) { 
-    this.show = show;
-    this.hide = hide;
-} 
-
 export class ChangeDice extends DiceGroup {
     selectedStyle = Object.assign({}, STYLE);
-    
-    output;
+
+    show = [];
+    hide = [];
 
     constructor(){
         super();
@@ -133,15 +155,149 @@ export class ChangeDice extends DiceGroup {
     }
 
     updateVisibility() {
-        let show: Array<number> = [];
-        let hide: Array<number> = [];
+        this.show = [];
+        this.hide = [];
         this.diceArray.forEach(dice => {
             if (dice.public_eyes) {
-                show.push(dice.id);
+                this.show.push(dice.id);
             } else {
-                hide.push(dice.id);
+                this.hide.push(dice.id);
             }
         });
-        this.output = output(show, hide);
+    }
+}
+
+
+
+export class MainDice extends DiceGroup {
+    blueStyle = Object.assign({}, STYLE);
+    
+    constructor(){
+        super();
+        this.blueStyle.fill = '#0000ff';
+    }
+
+    hidden = [];
+    public = [];
+
+    // Sorts the array of public dice based on eye count
+    sortPublic() {
+        let dice = [];
+        this.public.forEach(diceId => {
+            dice.push(this.diceArray[diceId-1]);
+        });
+        dice.sort((a, b) => (a.eyes < b.eyes) ? 1 : -1)
+        return dice
+    }
+
+    // Control visibility of dice in the hidden array
+    visibilityHidden(visible: boolean) {
+        if (visible) {
+            this.hidden.forEach(diceId => {
+                let dice = this.diceArray[diceId-1];
+                //let dice = this.getDiceById(diceId)
+                dice.visible = true;
+            });
+        } else {
+            this.hidden.forEach(diceId => {
+                let dice = this.diceArray[diceId-1];
+                dice.visible = false;
+            });
+        }
+    }
+
+    // Change public dice position to top
+    modeTopCup() {
+        this.deletePointerEvents();
+        this.visibilityHidden(false);
+        let topDice = this.sortPublic();
+        this.pivot.x = topDice.length*60/2;
+
+        topDice.forEach((dice, i) => {
+            let xPos = i*60;
+            let yPos = -200;
+            gsap.to(dice, {duration: 0.5, y: yPos, x: xPos});
+        });
+    }
+
+    // Change publilc dice position to side
+    modeSide() {
+        this.deletePointerEvents();
+        this.visibilityHidden(false);
+        let sideDice = this.sortPublic();
+
+        sideDice.forEach((dice, i) => {
+            let xPos = 200;
+            let yPos = i*60;
+            gsap.to(dice, {duration: 0.5, y: yPos, x: xPos});
+        });
+    }
+
+    
+    // Make the dice mode interactive
+    modeInteractive() {
+        this.visibilityHidden(true);
+        for(let i = 0; i<3; i++) {
+            let d = this.diceArray[i];
+
+            // Move dice back to original position
+            if (d.public_eyes) {
+                d.x = i * 60;
+                d.y = 75;
+            } else {
+                d.x = i * 60;
+                d.y = 0;
+            }
+
+            // Make dice clickable
+            d.interactive = true;
+            d.buttonMode = true;
+
+            d.on('pointerover', e => {
+                d.dicetext.style = this.blueStyle;
+            });
+            d.on('pointerout', e => {
+                d.dicetext.style = STYLE;
+            });
+            d.on('pointerdown', e => {
+                if (d.public_eyes) {
+                    d.public_eyes = false;
+                    gsap.to(d, {duration: 0.5, y: 0});
+                    d.dicetext.style = STYLE;
+                    this.updatePublic();
+                } else {
+                    d.public_eyes = true;
+                    gsap.to(d, {duration: 0.5, y: 50});
+                    d.dicetext.style = this.blueStyle;
+                    this.updatePublic();
+                }
+            });
+        }
+    }
+
+    // Deletes the pointer events added
+    deletePointerEvents() {
+        for(let i = 0; i<3; i++) {
+            let d = this.diceArray[i];
+            d.interactive = false;
+            d.buttonMode = false;
+            d.on('pointerover', e => {});
+            d.on('pointerout', e => {});
+            d.on('pointerdown', e => {});
+        }
+    }
+
+    // updates hidden and public arrays
+    // gets called every dice update
+    updatePublic() {
+        this.public = [];
+        this.hidden = [];
+        this.diceArray.forEach(dice => {
+            if (dice.public_eyes) {
+                this.public.push(dice.id);
+            } else {
+                this.hidden.push(dice.id);
+            }
+        });
     }
 }
