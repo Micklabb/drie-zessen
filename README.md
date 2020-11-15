@@ -31,7 +31,7 @@ npm run dev
 
 Open [http://localhost:2567](http://localhost:2567) in je browser.
 
-Als je zelf wilt werken aan het spel kan dit via git push requests. Voor meer info kan je het beste de Colyseus en PixiJS documentatie lezen. Daarnaast is het ook handig als je ongeveer weet hoe npm packages werken en hoe NodeJS werkt. De programmeertalen zijn vooral Javascript en Typescript. Het belangrijkste bestand voor de server is src/server/GameRoom.ts. Het belangrijkste bestand voor de client is src/client/Controls.ts.
+Als je zelf wilt werken aan het spel kan dit via git push requests. Voor meer info kan je het beste de Colyseus en PixiJS documentatie lezen. Daarnaast is het ook handig als je ongeveer weet hoe npm packages werken en hoe NodeJS werkt. De programmeertalen zijn vooral Javascript en Typescript. Het belangrijkste bestand voor de server is src/server/rooms/GameRoom.ts. Het belangrijkste bestand voor de main room van de client is src/client/rooms/MainRoom.ts.
 
 **Server Packages**  
 Colyseus: https://docs.colyseus.io/
