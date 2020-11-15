@@ -24,8 +24,6 @@ export class PlayerList extends PIXI.Container {
     }
 
     updatePlayers() {
-        console.log("second");
-
         const textSettings = {
             fontFamily : 'Arial',
             fontSize: 16,
