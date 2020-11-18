@@ -34,7 +34,7 @@ export class PlayerList extends PIXI.Container {
         let list = "Players:";
 
         this.state.playerSeats.forEach((player, i) => {
-            list += `\n${i}. ${this.state.players[player].name}`
+            list += `\n${i+1}. ${this.state.players[player].name}`
         })
 
         this.playerlist.text = list;

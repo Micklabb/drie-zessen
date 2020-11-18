@@ -237,6 +237,10 @@ export class MainDice extends DiceGroup {
     // Make the dice mode interactive
     modeInteractive() {
         this.visibilityHidden(true);
+        // updatePublic should always be called, to account for the case where the user
+        // doesn't make any changes in the dice being public or not, i.e. they dont't
+        // click so d.on('pointerdown') is never called.
+        this.updatePublic();
         for(let i = 0; i<3; i++) {
             let d = this.diceArray[i];
 
