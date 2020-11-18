@@ -28,6 +28,7 @@ export class CupAndDice extends PIXI.Container {
         proposeDice.visible = false;
         this.addChild(proposeDice);
 
+
         let texture = PIXI.Texture.from(cupSrc);
         let cup = new PIXI.Sprite(texture);
         cup.anchor.set(0.5, 0.5);
@@ -138,8 +139,13 @@ export class CupAndDice extends PIXI.Container {
                     clickendX = e.data.global.x;
                     if (clickbeginX - clickendX > 5) {
                         //console.log("lift");
-                        this.app.room.send({command: "propose"});
-                        gsap.to(cup, {duration: 0.7, y: -500, alpha: 0})
+                        // Dit werkt niet, hoe krijg je de waardes van de proposedice?
+                        // De proposeDice.lastDiceValues moet eerst worden geupdatet, ze staan nu nog op de 
+                        // default waardes 1,1,1
+                        let currentProposeDice = proposeDice.lastDiceValues;
+                        let tip = 0;
+                        this.app.room.send({command: "propose", value: `{"roll": [${currentProposeDice}], "tip": [${tip}]}`});
+                        gsap.to(cup, {duration: 0.7, x: -500, alpha: 0})
                     }
 
                     //app.ticker.remove();
