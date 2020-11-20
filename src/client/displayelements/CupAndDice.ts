@@ -68,14 +68,14 @@ export class CupAndDice extends PIXI.Container {
         cup.on('pointerdown', e => {
             clickbeginY = e.data.global.y;
             clickbeginX = e.data.global.x;
-            clickbeginT = e.timeStamp;
+            clickbeginT = Date.now();
         });
 
         cup.on('pointerup', e => {
             switch(this.app.room.state.turnPhase) {
                 case 0:
                     clickendY = e.data.global.y;
-                    clickendT = e.timeStamp;
+                    clickendT = Date.now();
                     console.log(clickendT-clickbeginT);
                     if (clickbeginY - clickendY > 10) {
                         //console.log("lift"); 
@@ -96,7 +96,7 @@ export class CupAndDice extends PIXI.Container {
                     /*
                     changeDice.diceArray.forEach(dice => {
                         if (dice.visible) {
-                            dice.y = -100;
+                            dice.y = -100; 
                         }
                     })
                     */
@@ -136,10 +136,18 @@ export class CupAndDice extends PIXI.Container {
                     break;
                 case 5:
                     clickendX = e.data.global.x;
-                    if (clickbeginX - clickendX > 5) {
+                    clickendT = Date.now();
+                    let prop = [];
+                    console.log(clickendT-clickbeginT);
+                    if (clickendX - clickbeginX > 5 && clickendT - clickbeginT < 400) {
+                        proposeDice.diceArray.forEach(dice => {
+                            prop.push(dice.eyes);
+                        });
+                        console.log(prop);
+                        this.app.room.send({command: "propose", value: `{"roll": [${prop}], "tip": 1}`});
                         //console.log("lift");
-                        this.app.room.send({command: "propose"});
-                        gsap.to(cup, {duration: 0.7, y: -500, alpha: 0})
+                        //this.app.room.send({command: "propose"});
+                        //gsap.to(cup, {duration: 0.7, y: -500, alpha: 0})
                     }
 
                     //app.ticker.remove();
