@@ -28,6 +28,7 @@ export class CupAndDice extends PIXI.Container {
         proposeDice.visible = false;
         this.addChild(proposeDice);
 
+
         let texture = PIXI.Texture.from(cupSrc);
         let cup = new PIXI.Sprite(texture);
         cup.anchor.set(0.5, 0.5);
@@ -145,9 +146,8 @@ export class CupAndDice extends PIXI.Container {
                         });
                         console.log(prop);
                         this.app.room.send({command: "propose", value: `{"roll": [${prop}], "tip": 1}`});
-                        //console.log("lift");
-                        //this.app.room.send({command: "propose"});
-                        //gsap.to(cup, {duration: 0.7, y: -500, alpha: 0})
+                        gsap.to(cup, {duration: 0.7, x: -500, alpha: 0})
+                        console.log("lift");
                     }
 
                     //app.ticker.remove();

@@ -93,7 +93,7 @@ export function reorder(state: State, jsonString: string) {
         let dice = state.roll.getDiceById(id);
         dice.visible = false;
     });
-
+    
     return 1;
 }
 
