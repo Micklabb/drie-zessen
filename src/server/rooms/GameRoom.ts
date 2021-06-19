@@ -7,6 +7,7 @@ export class GameRoom extends Room<State> {
   maxClients = 10;
 
   playerCount: number = 0;
+  
   DEBUG = true;
 
   // This function is called when the first player enters the room.
@@ -31,9 +32,7 @@ export class GameRoom extends Room<State> {
     this.state.players[client.sessionId] = player;
     this.playerCount++;
 
-    if (this.playerCount >= 2) {
-      this.state.phase = "Playing...";
-    }
+    glf.updatePhase(this.playerCount, this.state);
   }
 
   // This function is called when the a player sends a message.
@@ -198,6 +197,10 @@ export class GameRoom extends Room<State> {
     state.proposedRoll.sum = 6;
     
     state.losingPlayer = "";
+
+    if(this.DEBUG){
+      state.debug_mode = true;
+    }
 
     this.setState(state);
   }

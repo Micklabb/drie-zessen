@@ -29,7 +29,7 @@ export class State extends Schema {
     proposedRoll: DiceCollection;;
 
     @type('string')
-    phase: string = 'waiting';
+    phase: string = 'Starting...';
 
     @type('string')
     losingPlayer: string = "";
@@ -42,5 +42,8 @@ export class State extends Schema {
 
     @type('int8')
     turnPhase: number;
+
+    @type('boolean')
+    debug_mode: boolean;
 
 }

@@ -6,6 +6,7 @@ import { PlayerList } from "../displayelements/Playerlist";
 import { InsertName } from "../displayelements/SubmitNameScreen";
 import { CupAndDice } from "../displayelements/CupAndDice";
 import { ShowTurn } from "../displayelements/ShowTurnText";
+import { DebugOverlay } from "../displayelements/DebugOverlay";
 
 export class MainRoom extends PIXI.Container {
     app: Application;
@@ -43,10 +44,24 @@ export class MainRoom extends PIXI.Container {
         // Create name submission screen start game
         let namescreen = new InsertName(this.app);
         this.app.stage.addChild(namescreen);
+       
+        // Create debug overlay if debug mode is on
+        let debugoverlay = new DebugOverlay(this.room.state);
+        this.app.stage.addChild(debugoverlay);
+        
 
         this.room.onStateChange((state) => {
             console.log("the room state has been updated:", state);
             playerlist.updatePlayers();
+
+            // Display debug overlay if debug mode is on
+            if(this.room.state.debug_mode){
+                debugoverlay.visible = true;
+                debugoverlay.updateOverlay();
+                debugoverlay.y = this.app.screen.height - debugoverlay.height;
+            } else {
+                debugoverlay.visible = false;
+            }
             
             // Display the playerlist in the top left
             if(!(this.room.state.players[this.room.sessionId].name)) {
