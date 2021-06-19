@@ -146,7 +146,7 @@ export class CupAndDice extends PIXI.Container {
                         prop.push(dice.eyes);
                     });
                     console.log(prop);
-                    this.app.room.send({command: "propose", value: `{"roll": [${prop}], "tip": 1}`});
+                    this.app.room.send({command: "propose", value: `{"roll": [${prop}], "tip": 0}`});
                     gsap.to(this.cup, {duration: 0.7, x: -500, alpha: 0})
                     console.log("lift");
                 }
