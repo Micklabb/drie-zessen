@@ -37,10 +37,10 @@ export class InsertName extends PIXI.Container {
         button.interactive = true;
         button.buttonMode = true;
 
-        button.on('pointerdown', this.sendName.bind(this));
-        button.on('pointerup', this.onButtonUp.bind(this));
+        button.on('pointerdown', this.onButtonDown.bind(this));
+        button.on('pointerup', this.sendName.bind(this));
 
-        this.input.on('keydown', keycode => {
+        this.input.on('keyup', keycode => {
             if(keycode == 13) {
                 this.sendName();
                 this.input.blur();
@@ -71,12 +71,12 @@ export class InsertName extends PIXI.Container {
     }
 
     sendName() {
-        //this.isdown = true;
+        //this.isdown = false;
         this.app.room.send({command: "name", value: this.input.text});
     }
     
-    onButtonUp() {
-        //this.isdown = false;
+    onButtonDown() {
+        //this.isdown = true;
         //console.log("up");
     }
 }
