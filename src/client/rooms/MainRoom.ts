@@ -45,16 +45,15 @@ export class MainRoom extends PIXI.Container {
         let namescreen = new InsertName(this.app);
         this.app.stage.addChild(namescreen);
        
-        // Create debug overlay if debug mode is on
+        // Create debug overlay
         let debugoverlay = new DebugOverlay(this.room.state);
         this.app.stage.addChild(debugoverlay);
-        
 
         this.room.onStateChange((state) => {
             console.log("the room state has been updated:", state);
             playerlist.updatePlayers();
 
-            // Display debug overlay if debug mode is on
+            // Show and update debug overlay if debug mode is on
             if(this.room.state.debug_mode){
                 debugoverlay.visible = true;
                 debugoverlay.updateOverlay();
@@ -63,9 +62,10 @@ export class MainRoom extends PIXI.Container {
                 debugoverlay.visible = false;
             }
             
-            // Display the playerlist in the top left
+            // Display the overlay to fill in name
             if(!(this.room.state.players[this.room.sessionId].name)) {
                 namescreen.visible = true;
+                // Prevent clicking the cup and dice under the namescreen
                 cupAndDice.interactiveChildren = false;
             } else {
                 namescreen.visible = false;
