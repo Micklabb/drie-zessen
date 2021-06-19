@@ -139,12 +139,12 @@ export function propose(player: Player, state: State, jsonString: string) {
         return 0;
     }
 
-    if (!obj.roll || !obj.tip) return 0;
+    if (!obj.roll || obj.tip == undefined) return 0;
     if (obj.roll.length != 3) return 0;
     obj.roll.forEach(num => {
         if (num < 1 || num > 6) return 0;
     });
-    if (obj.tip < 1 || obj.tip > 6) return 0;
+    if (obj.tip < 0 || obj.tip > 6) return 0;
 
     // Save previous proposal
     let prevProposedRoll = state.proposedRoll;
