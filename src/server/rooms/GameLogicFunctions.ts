@@ -208,7 +208,7 @@ export function restart(state: State) {
 
 export function updatePhase(playerCount: number, state: State) {
     if (playerCount < 2) {
-        state.phase = "Waiting for at least 2 players to join";
+        state.phase = "Waiting for at least 2 players to join...";
     } else if (playerCount > 1) {
         state.phase = "Playing..."
     }
