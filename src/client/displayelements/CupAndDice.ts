@@ -15,8 +15,6 @@ export class CupAndDice extends PIXI.Container {
     proposeDice = new ProposeDice();
     cup = new PIXI.Sprite();
 
-    cupAnimating = false;
-
     // Stores info about a pointer event
     click = {
         tstart: 0,
@@ -42,6 +40,17 @@ export class CupAndDice extends PIXI.Container {
         // https://pixijs.io/examples/#/interaction/dragging.js (Draging)
     }
 
+    // Disable or enable clicking if it's not your turn
+    disableControls() {
+        this.cup.interactive = false;
+        this.cup.buttonMode = false;
+    }
+
+    enableControls() {
+        this.cup.interactive = true;
+        this.cup.buttonMode = true;
+    }
+
     // Update values of dice
     onNewRoll(changes) {
         let values = []
@@ -63,6 +72,7 @@ export class CupAndDice extends PIXI.Container {
 
     // Handles pointer events corresponding to turn phases
     onPointerUpCup(e) {
+        let cupAnimating = false;
         switch(this.app.room.state.turnPhase) {
             case 0:
                 this.click.yend = e.data.global.y;
@@ -93,8 +103,8 @@ export class CupAndDice extends PIXI.Container {
                 })
                 */
             case 2:                    
-                if (!this.cupAnimating) {
-                    this.cupAnimating = true;
+                if (!cupAnimating) {
+                    cupAnimating = true;
                     this.mainDice.modeSide();
                     gsap.to(this.cup, {duration: 0.1, x:"+=20", yoyo:true, repeat:5, onCompleteParams: [this], onComplete:function(parent){
                         parent.app.room.send({command: "throw"});
@@ -168,7 +178,6 @@ export class CupAndDice extends PIXI.Container {
 
         this.cup.interactive = true;
         this.cup.buttonMode = true;
-        this.cupAnimating = false;
     }
 
 }
