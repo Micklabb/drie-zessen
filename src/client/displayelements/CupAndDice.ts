@@ -18,14 +18,14 @@ export class CupAndDice extends PIXI.Container {
     cupAnimating = false;
 
     // Stores info about a pointer event
-    click: {
-        tstart: number;
-        tend: number;
-        xstart: number;
-        xend: number;
-        ystart: number;
-        yend: number;
-    }
+    click = {
+        tstart: 0,
+        tend: 0,
+        xstart: 0,
+        xend: 0,
+        ystart: 0,
+        yend: 0
+    };
 
     constructor(app: Application) {
         super();
@@ -36,7 +36,7 @@ export class CupAndDice extends PIXI.Container {
 
         // Register all listeners
         this.app.room.state.roll.onChange = (changes) => this.onNewRoll(changes);
-        this.cup.on('pointerdown', e => this.onPointerUpCup(e));
+        this.cup.on('pointerdown', e => this.onPointerDownCup(e));
         this.cup.on('pointerup', e => this.onPointerUpCup(e));
 
         // https://pixijs.io/examples/#/interaction/dragging.js (Draging)
@@ -121,8 +121,8 @@ export class CupAndDice extends PIXI.Container {
                 this.proposeDice.alpha = 0;
                 this.proposeDice.visible = true;
                 this.proposeDice.zIndex = 100;
-                gsap.to(this.cup, {duration: 0.5, y: 0, onComplete:function(){
-                    gsap.to(this.proposeDice, {duration: 0.5, alpha: 1});
+                gsap.to(this.cup, {duration: 0.5, y: 0, onCompleteParams: [this], onComplete:function(parent){
+                    gsap.to(parent.proposeDice, {duration: 0.5, alpha: 1});
                 }});
                 
                 break;
