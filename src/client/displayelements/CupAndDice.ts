@@ -175,9 +175,6 @@ export class CupAndDice extends PIXI.Container {
         this.cup.setTransform(0,0,0.9,0.9,Math.PI);
         this.cup.zIndex = 1;
         this.addChild(this.cup);
-
-        this.cup.interactive = true;
-        this.cup.buttonMode = true;
     }
 
 }
