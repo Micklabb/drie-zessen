@@ -17,7 +17,7 @@ export class Application extends PIXI.Application {
 
     constructor () {
         super({
-            backgroundColor: 0x00ff00,
+            backgroundColor: 0x072E6A,
             antialias: true,
         });
 

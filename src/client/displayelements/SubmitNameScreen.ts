@@ -14,7 +14,7 @@ export class InsertName extends PIXI.Container {
         this.visible = false;
 
         let overlay = new PIXI.Graphics();
-        overlay.beginFill(0xFFFFFF, 0.5);
+        overlay.beginFill(0xFFFFFF, 0.2);
         overlay.drawRect(0, 0, this.app.renderer.width, this.app.renderer.height);
         overlay.endFill();
         this.addChild(overlay);

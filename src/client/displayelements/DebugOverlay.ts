@@ -16,7 +16,7 @@ export class DebugOverlay extends PIXI.Container {
         const textSettings = {
             fontFamily : 'Arial',
             fontSize: 16,
-            fill : 0x000000,
+            fill : 0xffffff,
             align : 'left'
         }
 
