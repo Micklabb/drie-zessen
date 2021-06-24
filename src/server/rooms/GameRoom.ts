@@ -75,7 +75,7 @@ export class GameRoom extends Room<State> {
         this.state.turnPhase += 1;
         // If the player believes a 666 proposal
         if (this.state.proposedRoll.sum == 666) {
-          this.state.turnPhase = 6;
+          this.state.turnPhase = 10;
         }
         break;
       case 'lift':
@@ -110,12 +110,15 @@ export class GameRoom extends Room<State> {
       case 'propose':
         if (this.state.turnPhase != 5) return;
         if (glf.propose(player, this.state, value)) {
-          this.state.playerTurn = (this.state.playerTurn + 1) % this.playerCount;
-          this.state.turnPhase = 0;
+          this.state.turnPhase = 6;
         } else {
           console.log("Error when making proposal");
         }
         break;
+      case 'ending_turn':
+        if (this.state.turnPhase != 6) return;
+        this.state.playerTurn = (this.state.playerTurn + 1) % this.playerCount;
+        this.state.turnPhase = 0;
     }
     console.log("-- TURN:", this.state.playerTurn, "PHASE:", this.state.turnPhase + " --");
   }

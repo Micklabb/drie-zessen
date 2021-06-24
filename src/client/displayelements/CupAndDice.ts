@@ -40,17 +40,6 @@ export class CupAndDice extends PIXI.Container {
         // https://pixijs.io/examples/#/interaction/dragging.js (Draging)
     }
 
-    // Disable or enable clicking if it's not your turn
-    disableControls() {
-        this.cup.interactive = false;
-        this.cup.buttonMode = false;
-    }
-
-    enableControls() {
-        this.cup.interactive = true;
-        this.cup.buttonMode = true;
-    }
-
     // Update values of dice
     onNewRoll(changes) {
         let values = []
@@ -147,14 +136,30 @@ export class CupAndDice extends PIXI.Container {
                     });
                     console.log(prop);
                     this.app.room.send({command: "propose", value: `{"roll": [${prop}], "tip": 0}`});
-                    gsap.to(this.cup, {duration: 0.7, x: -500, alpha: 0})
-                    console.log("lift");
                 }
-
-                //app.ticker.remove();
                 break;
         }
 
+    }
+
+    // This resets the cup and dice controls
+    checkForTurnChange() {
+        // Begin new turn
+        if(this.app.room.state.turnPhase == 0) {
+            this.mainDice.visible = false;
+            this.proposeDice.visible = false;
+            this.cup.x = 0;
+            this.cup.alpha = 1;
+        }
+
+        // End the turn
+        if(this.app.room.state.turnPhase == 6) {
+            gsap.to(this.cup, {duration: 1.0, x: -500, alpha: 0, onCompleteParams: [this], onComplete:function(parent){
+                parent.mainDice.visible = false;
+                parent.proposeDice.visible = false;
+                parent.app.room.send({command: "ending_turn"});
+            }});
+        }
     }
 
     addElements() {
@@ -175,6 +180,9 @@ export class CupAndDice extends PIXI.Container {
         this.cup.setTransform(0,0,0.9,0.9,Math.PI);
         this.cup.zIndex = 1;
         this.addChild(this.cup);
+
+        this.cup.interactive = true;
+        this.cup.buttonMode = true;
     }
 
 }
