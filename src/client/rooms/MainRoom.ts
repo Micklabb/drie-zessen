@@ -112,12 +112,13 @@ export class MainRoom extends PIXI.Container {
             if (turn == seat) {
                 // print your turn
                 showturn.updateTurnDisplay("Your Turn!");
-                showturn.pivot.x = cupAndDice.width / 2;
+                showturn.pivot.x = showturn.width / 2;
             } else {
                 // print other player name
                 let playerid = this.room.state.playerSeats[turn];
                 let player = this.room.state.players[playerid].name;
                 showturn.updateTurnDisplay(player);
+                showturn.pivot.x = showturn.width / 2;
             }
         });
     }
