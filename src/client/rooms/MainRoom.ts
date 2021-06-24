@@ -85,6 +85,7 @@ export class MainRoom extends PIXI.Container {
         this.room.onStateChange((state) => {
             console.log("the room state has been updated:", state);
             playerlist.updatePlayers();
+            cupAndDice.checkForTurnChange();
 
             // Show and update debug overlay if debug mode is on
             if(this.room.state.debug_mode){
@@ -112,13 +113,11 @@ export class MainRoom extends PIXI.Container {
                 // print your turn
                 showturn.updateTurnDisplay("Your Turn!");
                 showturn.pivot.x = cupAndDice.width / 2;
-                cupAndDice.enableControls();
             } else {
                 // print other player name
                 let playerid = this.room.state.playerSeats[turn];
                 let player = this.room.state.players[playerid].name;
                 showturn.updateTurnDisplay(player);
-                cupAndDice.disableControls();
             }
         });
     }

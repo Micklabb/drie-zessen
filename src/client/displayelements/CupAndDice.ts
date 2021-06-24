@@ -142,10 +142,26 @@ export class CupAndDice extends PIXI.Container {
 
     }
 
-    // This resets the cup and dice controls
+    // Returns if it is the players turn or not
+    myTurn() {
+        let turn = this.app.room.state.playerTurn;
+        let seat = this.app.room.state.players[this.app.room.sessionId].seat;
+        return turn == seat
+    }
+
+    // This resets the cup and dice controls if a turn changes
     checkForTurnChange() {
+        // Checks if the cup is supposed to be visible
+        if(this.myTurn()) {
+            this.cup.visible = true;
+        } else {
+            this.cup.visible = false;
+        }
+
         // Begin new turn
-        if(this.app.room.state.turnPhase == 0) {
+        if(this.app.room.state.turnPhase == 0 && this.myTurn()) {
+            // fix so its only the first state
+            console.log("resetting...")
             this.mainDice.visible = false;
             this.proposeDice.visible = false;
             this.cup.x = 0;
@@ -153,7 +169,7 @@ export class CupAndDice extends PIXI.Container {
         }
 
         // End the turn
-        if(this.app.room.state.turnPhase == 6) {
+        if(this.app.room.state.turnPhase == 6 && this.myTurn()) {
             gsap.to(this.cup, {duration: 1.0, x: -500, alpha: 0, onCompleteParams: [this], onComplete:function(parent){
                 parent.mainDice.visible = false;
                 parent.proposeDice.visible = false;
