@@ -106,6 +106,7 @@ export class CupAndDice extends PIXI.Container {
                 this.app.room.send({command: "look"});
                 this.mainDice.visible = true;
                 this.mainDice.modeInteractive();
+                this.mainDice.pivot.x = this.mainDice.width / 2;
                 this.mainDice.zIndex = 0;
                 gsap.to(this.cup, {duration: 0.5, y: -100});
                 break;
@@ -198,8 +199,8 @@ export class CupAndDice extends PIXI.Container {
         this.cup.zIndex = 1;
         this.addChild(this.cup);
 
-        this.cup.interactive = true;
-        this.cup.buttonMode = true;
+        this.cup.interactive = true; // clickable
+        this.cup.buttonMode = true; // pointer icon
     }
 
 }
