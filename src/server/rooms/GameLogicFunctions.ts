@@ -19,6 +19,9 @@ export function nameSetter(player: Player, state: State, command: string, value:
             if (state.players[id].name == value) return 0;
         }
 
+        // If the name is longer than 15 characters, refuse name
+        if (value.length > 15) return 0;
+
         player.name = value;
         console.log(player.sessionId, "registered as:", player.name);
         return 0;
