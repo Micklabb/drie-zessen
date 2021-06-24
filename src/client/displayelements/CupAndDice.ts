@@ -158,22 +158,23 @@ export class CupAndDice extends PIXI.Container {
             this.cup.visible = false;
         }
 
-        // Begin new turn
-        if(this.app.room.state.turnPhase == 0 && this.myTurn()) {
-            // fix so its only the first state
-            console.log("resetting...")
-            this.mainDice.visible = false;
-            this.proposeDice.visible = false;
-            this.cup.x = 0;
-            this.cup.alpha = 1;
-        }
-
         // End the turn
         if(this.app.room.state.turnPhase == 6 && this.myTurn()) {
-            gsap.to(this.cup, {duration: 1.0, x: -500, alpha: 0, onCompleteParams: [this], onComplete:function(parent){
+            gsap.to(this.cup, {duration: 1.0, x: 500, alpha: 0, onCompleteParams: [this], onComplete:function(parent){
                 parent.mainDice.visible = false;
                 parent.proposeDice.visible = false;
                 parent.app.room.send({command: "ending_turn"});
+            }});
+        }
+        
+        // Begin new turn
+        if(this.app.room.state.turnPhase == 6 && !this.myTurn()) {
+            this.cup.x = -500;
+            this.cup.alpha = 0;
+            this.cup.visible = true;
+            gsap.to(this.cup, {duration: 1.0, x: 0, alpha: 1, onCompleteParams: [this], onComplete:function(parent){
+                parent.mainDice.visible = false;
+                parent.proposeDice.visible = false;
             }});
         }
     }
